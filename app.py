@@ -1,13 +1,14 @@
 from flask import Flask, render_template, request
-import os
+import boto3
 from werkzeug.utils import secure_filename
+import os
 
 app = Flask(__name__)
 
-# Directory to store uploaded images
-UPLOAD_FOLDER = os.path.join('static', 'uploads')
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# S3 Configuration
+S3_BUCKET = "your-bucket-name"  # ← Set your bucket name here
+S3_REGION = "ap-south-1"  # Replace with your region
+s3 = boto3.client("s3", region_name=S3_REGION)
 
 @app.route('/', methods=['GET', 'POST'])
 def form():
@@ -17,14 +18,19 @@ def form():
         parent_name = request.form.get('parent_name')
         contact = request.form.get('contact')
 
-        # Handle image upload
+        # Upload image to S3
         image = request.files.get('baby_image')
         image_url = None
+
         if image and image.filename:
             filename = secure_filename(image.filename)
-            image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            image.save(image_path)
-            image_url = f"/static/uploads/{filename}"
+            s3.upload_fileobj(
+                image,
+                S3_BUCKET,
+                filename,
+                ExtraArgs={'ACL': 'public-read'}  # Make it publicly accessible
+            )
+            image_url = f"https://{S3_BUCKET}.s3.{S3_REGION}.amazonaws.com/{filename}"
 
         return render_template(
             'form.html',
