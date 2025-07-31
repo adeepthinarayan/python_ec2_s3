@@ -1,37 +1,120 @@
-<!-- templates/form.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
     <title>Cute Baby Contest</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #fef9f4;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 500px;
+        background: #fff;
+        padding: 30px;
+        margin: 50px auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h2 {
+        text-align: center;
+        color: #ff6f61;
+      }
+
+      label {
+        display: block;
+        margin-top: 15px;
+        font-weight: bold;
+      }
+
+      input[type="text"],
+      input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-sizing: border-box;
+      }
+
+      input[type="submit"] {
+        background-color: #ff6f61;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 20px;
+        width: 100%;
+        font-size: 16px;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #ff3b2e;
+      }
+
+      .thank-you {
+        text-align: center;
+        background-color: #e6ffe6;
+        border: 1px solid #b3ffb3;
+        padding: 20px;
+        border-radius: 12px;
+        margin-top: 20px;
+      }
+
+      ul {
+        list-style: none;
+        padding-left: 0;
+      }
+
+      ul li {
+        margin-bottom: 8px;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          margin: 20px;
+          padding: 20px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h2>Cute Baby Contest Form</h2>
-    {% if submitted %}
-    <p>
-      <strong>Thank you, {{ parent_name }}!</strong> Your baby's entry has been
-      received.
-    </p>
-    <ul>
-      <li>Baby Name: {{ baby_name }}</li>
-      <li>Baby Age: {{ baby_age }}</li>
-      <li>Contact: {{ contact }}</li>
-    </ul>
-    {% else %}
-    <form method="POST">
-      <label for="baby_name">Baby's Name:</label><br />
-      <input type="text" name="baby_name" required /><br />
+    <div class="container">
+      <h2>Cute Baby Contest Form</h2>
 
-      <label for="baby_age">Baby's Age (in months):</label><br />
-      <input type="number" name="baby_age" required /><br />
+      {% if submitted %}
+      <div class="thank-you">
+        <p><strong>Thank you, {{ parent_name }}!</strong></p>
+        <p>Your baby's entry has been received 💖</p>
+        <ul>
+          <li><strong>Baby Name:</strong> {{ baby_name }}</li>
+          <li><strong>Baby Age:</strong> {{ baby_age }} months</li>
+          <li><strong>Contact:</strong> {{ contact }}</li>
+        </ul>
+      </div>
+      {% else %}
+      <form method="POST">
+        <label for="baby_name">Baby's Name:</label>
+        <input type="text" name="baby_name" required />
 
-      <label for="parent_name">Parent's Name:</label><br />
-      <input type="text" name="parent_name" required /><br />
+        <label for="baby_age">Baby's Age (in months):</label>
+        <input type="number" name="baby_age" required />
 
-      <label for="contact">Contact Info:</label><br />
-      <input type="text" name="contact" required /><br /><br />
+        <label for="parent_name">Parent's Name:</label>
+        <input type="text" name="parent_name" required />
 
-      <input type="submit" value="Submit" />
-    </form>
-    {% endif %}
+        <label for="contact">Contact Info:</label>
+        <input type="text" name="contact" required />
+
+        <input type="submit" value="Submit Entry" />
+      </form>
+      {% endif %}
+    </div>
   </body>
 </html>
