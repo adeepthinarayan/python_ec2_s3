@@ -30,7 +30,7 @@ def baby_form():
 
         try:
             # Upload to S3 (public-read so we can show the image back)
-            s3.upload_file(filepath, S3_BUCKET, filename, ExtraArgs={'ACL': 'public-read'})
+            s3.upload_file(filepath, S3_BUCKET, filename)
 
             image_url = f"https://{S3_BUCKET}.s3.amazonaws.com/{filename}"
 
