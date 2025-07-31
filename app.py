@@ -52,7 +52,7 @@ def upload_form():
 
             # Upload to S3
             try:
-                s3.upload_file(local_path, S3_BUCKET, filename)
+                s3.upload_file(local_path, S3_BUCKET, filename, ExtraArgs={'ACL': 'public-read'})
                 image_url = f"https://{S3_BUCKET}.s3.{S3_REGION}.amazonaws.com/{filename}"
             except Exception as e:
                 return f"Upload failed: {str(e)}"

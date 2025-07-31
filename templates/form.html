@@ -6,32 +6,31 @@
     <style>
       body {
         font-family: "Segoe UI", sans-serif;
-        background-color: #ffe6f0;
+        background-color: #f4f6f8;
         margin: 0;
         padding: 0;
       }
 
       .container {
         max-width: 600px;
-        margin: 40px auto;
+        margin: 50px auto;
         padding: 30px;
-        background-color: #fff0f5;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        border-radius: 15px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       }
 
       h1 {
         text-align: center;
-        color: #d63384;
-        font-size: 32px;
-        margin-bottom: 20px;
+        color: #2c3e50;
+        margin-bottom: 25px;
       }
 
       label {
         display: block;
         margin-top: 15px;
-        font-weight: bold;
-        color: #6c3483;
+        font-weight: 600;
+        color: #34495e;
       }
 
       input[type="text"],
@@ -41,44 +40,46 @@
         padding: 10px;
         margin-top: 6px;
         border: 1px solid #ccc;
-        border-radius: 8px;
+        border-radius: 6px;
         box-sizing: border-box;
+        background-color: #f9f9f9;
       }
 
       input[type="submit"] {
-        margin-top: 20px;
-        background-color: #ff66b2;
+        margin-top: 25px;
+        background-color: #3498db;
         color: white;
         border: none;
-        padding: 14px;
+        padding: 12px;
         font-size: 16px;
-        border-radius: 8px;
+        border-radius: 6px;
         cursor: pointer;
         width: 100%;
+        transition: background-color 0.3s ease;
       }
 
       input[type="submit"]:hover {
-        background-color: #ff3385;
+        background-color: #2980b9;
       }
 
       .result {
-        margin-top: 30px;
+        margin-top: 20px;
         padding: 20px;
-        background-color: #fff7fb;
-        border-left: 6px solid #ff99cc;
-        border-radius: 10px;
+        background-color: #ecf7ff;
+        border-left: 5px solid #3498db;
+        border-radius: 8px;
       }
 
       .result img {
         max-width: 100%;
         height: auto;
         margin-top: 15px;
-        border-radius: 12px;
-        box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       }
 
       p {
-        color: #4b2354;
+        color: #2c3e50;
       }
     </style>
   </head>
@@ -86,6 +87,7 @@
     <div class="container">
       <h1>Baby Photo Contest</h1>
 
+      {% if not submitted %}
       <form method="POST" enctype="multipart/form-data">
         <label for="baby_name">Baby Name:</label>
         <input type="text" name="baby_name" id="baby_name" required />
@@ -110,8 +112,7 @@
 
         <input type="submit" value="Submit Entry" />
       </form>
-
-      {% if submitted %}
+      {% endif %} {% if submitted %}
       <div class="result">
         <h2>Thank you for your submission!</h2>
         <p><strong>Baby Name:</strong> {{ baby_name }}</p>
@@ -119,8 +120,10 @@
         <p><strong>Parent Name:</strong> {{ parent_name }}</p>
         <p><strong>Contact:</strong> {{ contact }}</p>
         {% if image_url %}
-        <p><strong>Uploaded Image:</strong></p>
+        <p><strong>Uploaded Photo:</strong></p>
         <img src="{{ image_url }}" alt="Uploaded Baby Image" />
+        {% else %}
+        <p><em>Image URL not available.</em></p>
         {% endif %}
       </div>
       {% endif %}
