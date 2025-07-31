@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Submission Successful</title>
+    <title>Baby Photo Contest</title>
     <style>
       body {
         font-family: "Segoe UI", sans-serif;
@@ -17,54 +17,113 @@
         padding: 30px;
         background-color: #fff0f5;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-        text-align: center;
+        border-radius: 15px;
       }
 
       h1 {
+        text-align: center;
         color: #d63384;
+        font-size: 32px;
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-top: 15px;
+        font-weight: bold;
+        color: #6c3483;
+      }
+
+      input[type="text"],
+      input[type="number"],
+      input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 6px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+      }
+
+      input[type="submit"] {
+        margin-top: 20px;
+        background-color: #ff66b2;
+        color: white;
+        border: none;
+        padding: 14px;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #ff3385;
+      }
+
+      .result {
+        margin-top: 30px;
+        padding: 20px;
+        background-color: #fff7fb;
+        border-left: 6px solid #ff99cc;
+        border-radius: 10px;
+      }
+
+      .result img {
+        max-width: 100%;
+        height: auto;
+        margin-top: 15px;
+        border-radius: 12px;
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
       }
 
       p {
-        font-size: 18px;
-        color: #444;
-        margin: 10px 0;
-      }
-
-      img {
-        margin-top: 20px;
-        max-width: 100%;
-        border-radius: 12px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      }
-
-      a {
-        display: inline-block;
-        margin-top: 30px;
-        padding: 10px 20px;
-        background-color: #d63384;
-        color: white;
-        text-decoration: none;
-        border-radius: 6px;
-      }
-
-      a:hover {
-        background-color: #c2186a;
+        color: #4b2354;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>Thank You for Your Submission!</h1>
-      <p><strong>Baby Name:</strong> {{ baby_name }}</p>
-      <p><strong>Baby Age:</strong> {{ baby_age }}</p>
-      <p><strong>Parent Name:</strong> {{ parent_name }}</p>
-      <p><strong>Contact:</strong> {{ contact }}</p>
-      {% if image_url %}
-      <p><strong>Uploaded Photo:</strong></p>
-      <img src="{{ image_url }}" alt="Baby Photo" />
+      <h1>Baby Photo Contest</h1>
+
+      <form method="POST" enctype="multipart/form-data">
+        <label for="baby_name">Baby Name:</label>
+        <input type="text" name="baby_name" id="baby_name" required />
+
+        <label for="baby_age">Baby Age:</label>
+        <input type="number" name="baby_age" id="baby_age" required />
+
+        <label for="parent_name">Parent Name:</label>
+        <input type="text" name="parent_name" id="parent_name" required />
+
+        <label for="contact">Contact:</label>
+        <input type="text" name="contact" id="contact" required />
+
+        <label for="baby_image">Upload Baby Photo:</label>
+        <input
+          type="file"
+          name="baby_image"
+          id="baby_image"
+          accept="image/*"
+          required
+        />
+
+        <input type="submit" value="Submit Entry" />
+      </form>
+
+      {% if submitted %}
+      <div class="result">
+        <h2>Thank you for your submission!</h2>
+        <p><strong>Baby Name:</strong> {{ baby_name }}</p>
+        <p><strong>Baby Age:</strong> {{ baby_age }}</p>
+        <p><strong>Parent Name:</strong> {{ parent_name }}</p>
+        <p><strong>Contact:</strong> {{ contact }}</p>
+        {% if image_url %}
+        <p><strong>Uploaded Image:</strong></p>
+        <img src="{{ image_url }}" alt="Uploaded Baby Image" />
+        {% endif %}
+      </div>
       {% endif %}
-      <a href="{{ url_for('upload_form') }}">Submit Another Entry</a>
     </div>
   </body>
 </html>
