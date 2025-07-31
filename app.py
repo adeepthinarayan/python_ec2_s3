@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = '/tmp'  # Temporary storage before S3 upload
 
-S3_BUCKET = 'mihtpeed'
+S3_BUCKET = 'ihtpeed'
 
 # Initialize boto3 client (ensure IAM role is attached with proper S3 permissions)
 s3 = boto3.client('s3')
