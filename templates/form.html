@@ -1,0 +1,37 @@
+<!-- templates/form.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cute Baby Contest</title>
+  </head>
+  <body>
+    <h2>Cute Baby Contest Form</h2>
+    {% if submitted %}
+    <p>
+      <strong>Thank you, {{ parent_name }}!</strong> Your baby's entry has been
+      received.
+    </p>
+    <ul>
+      <li>Baby Name: {{ baby_name }}</li>
+      <li>Baby Age: {{ baby_age }}</li>
+      <li>Contact: {{ contact }}</li>
+    </ul>
+    {% else %}
+    <form method="POST">
+      <label for="baby_name">Baby's Name:</label><br />
+      <input type="text" name="baby_name" required /><br />
+
+      <label for="baby_age">Baby's Age (in months):</label><br />
+      <input type="number" name="baby_age" required /><br />
+
+      <label for="parent_name">Parent's Name:</label><br />
+      <input type="text" name="parent_name" required /><br />
+
+      <label for="contact">Contact Info:</label><br />
+      <input type="text" name="contact" required /><br /><br />
+
+      <input type="submit" value="Submit" />
+    </form>
+    {% endif %}
+  </body>
+</html>
