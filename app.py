@@ -1,48 +1,38 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 import boto3
-from werkzeug.utils import secure_filename
 import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = '/tmp'
 
-# S3 Configuration
-S3_BUCKET = "your-bucket-name"  # ← Set your bucket name here
-S3_REGION = "ap-south-1"  # Replace with your region
-s3 = boto3.client("s3", region_name=S3_REGION)
+# Set your S3 details
+S3_BUCKET = 'mihtpeed'
+s3 = boto3.client('s3')
 
-@app.route('/', methods=['GET', 'POST'])
-def form():
-    if request.method == 'POST':
-        baby_name = request.form.get('baby_name')
-        baby_age = request.form.get('baby_age')
-        parent_name = request.form.get('parent_name')
-        contact = request.form.get('contact')
+@app.route('/')
+def upload_form():
+    return render_template('upload.html')
 
-        # Upload image to S3
-        image = request.files.get('baby_image')
-        image_url = None
+@app.route('/', methods=['POST'])
+def upload_image():
+    if 'file' not in request.files:
+        return 'No file part'
 
-        if image and image.filename:
-            filename = secure_filename(image.filename)
-            s3.upload_fileobj(
-                image,
-                S3_BUCKET,
-                filename,
-                ExtraArgs={'ACL': 'public-read'}  # Make it publicly accessible
-            )
-            image_url = f"https://{S3_BUCKET}.s3.{S3_REGION}.amazonaws.com/{filename}"
+    file = request.files['file']
 
-        return render_template(
-            'form.html',
-            submitted=True,
-            baby_name=baby_name,
-            baby_age=baby_age,
-            parent_name=parent_name,
-            contact=contact,
-            image_url=image_url
-        )
+    if file.filename == '':
+        return 'No selected file'
 
-    return render_template('form.html', submitted=False)
+    if file:
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+
+        s3.upload_file(filepath, S3_BUCKET, filename)
+        return f'Image uploaded successfully to S3 bucket: {S3_BUCKET}/{filename}'
+
+    return 'File upload failed'
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
