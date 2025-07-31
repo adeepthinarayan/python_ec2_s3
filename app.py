@@ -18,7 +18,7 @@ DB_CONFIG = {
     'host': 'deepthi.cbmwd77sfjx4.us-east-1.rds.amazonaws.com',
     'user': 'admin',
     'password': 'deepthi123!',
-    'database': 'baby_contest'
+    'database': 'babycontest'
 }
 
 def insert_to_db(baby_name, baby_age, parent_name, contact, image_url):
@@ -26,7 +26,7 @@ def insert_to_db(baby_name, baby_age, parent_name, contact, image_url):
         connection = mysql.connector.connect(**DB_CONFIG)
         cursor = connection.cursor()
         cursor.execute("""
-            CREATE TABLE IF NOT EXISTS baby_entries (
+            CREATE TABLE IF NOT EXISTS entries (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 baby_name VARCHAR(100),
                 baby_age INT,
@@ -36,7 +36,7 @@ def insert_to_db(baby_name, baby_age, parent_name, contact, image_url):
             )
         """)
         cursor.execute("""
-            INSERT INTO baby_entries (baby_name, baby_age, parent_name, contact, image_url)
+            INSERT INTO entries (baby_name, baby_age, parent_name, contact, image_url)
             VALUES (%s, %s, %s, %s, %s)
         """, (baby_name, baby_age, parent_name, contact, image_url))
         connection.commit()

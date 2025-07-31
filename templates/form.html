@@ -1,52 +1,123 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
     <title>Baby Photo Contest</title>
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: #fff;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+
+      label {
+        display: block;
+        margin-top: 15px;
+        font-weight: bold;
+        color: #555;
+      }
+
+      input[type="text"],
+      input[type="number"],
+      input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 6px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+      }
+
+      input[type="submit"] {
+        margin-top: 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        font-size: 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        width: 100%;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #45a049;
+      }
+
+      .result {
+        margin-top: 30px;
+        padding: 20px;
+        background-color: #e7f3fe;
+        border-left: 6px solid #2196f3;
+        border-radius: 6px;
+      }
+
+      .result img {
+        max-width: 100%;
+        height: auto;
+        margin-top: 15px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+    </style>
   </head>
   <body>
-    <h1>Baby Photo Contest Form</h1>
+    <div class="container">
+      <h1>Baby Photo Contest</h1>
 
-    <form method="POST" enctype="multipart/form-data">
-      <label>Baby Name:</label><br />
-      <input type="text" name="baby_name" required /><br /><br />
+      <form method="POST" enctype="multipart/form-data">
+        <label for="baby_name">Baby Name:</label>
+        <input type="text" name="baby_name" id="baby_name" required />
 
-      <label>Baby Age:</label><br />
-      <input type="number" name="baby_age" required /><br /><br />
+        <label for="baby_age">Baby Age:</label>
+        <input type="number" name="baby_age" id="baby_age" required />
 
-      <label>Parent Name:</label><br />
-      <input type="text" name="parent_name" required /><br /><br />
+        <label for="parent_name">Parent Name:</label>
+        <input type="text" name="parent_name" id="parent_name" required />
 
-      <label>Contact:</label><br />
-      <input type="text" name="contact" required /><br /><br />
+        <label for="contact">Contact:</label>
+        <input type="text" name="contact" id="contact" required />
 
-      <label>Upload Baby Photo:</label><br />
-      <input
-        type="file"
-        name="baby_image"
-        accept="image/*"
-        required
-      /><br /><br />
+        <label for="baby_image">Upload Baby Photo:</label>
+        <input
+          type="file"
+          name="baby_image"
+          id="baby_image"
+          accept="image/*"
+          required
+        />
 
-      <input type="submit" value="Submit" />
-    </form>
+        <input type="submit" value="Submit Entry" />
+      </form>
 
-    {% if submitted %}
-    <hr />
-    <h2>Submission Successful!</h2>
-    <p><strong>Baby Name:</strong> {{ baby_name }}</p>
-    <p><strong>Baby Age:</strong> {{ baby_age }}</p>
-    <p><strong>Parent Name:</strong> {{ parent_name }}</p>
-    <p><strong>Contact:</strong> {{ contact }}</p>
-
-    {% if image_url %}
-    <p><strong>Uploaded Image:</strong></p>
-    <img
-      src="{{ image_url }}"
-      alt="Baby Image"
-      style="max-width: 300px; max-height: 300px"
-    />
-    {% else %}
-    <p>No image uploaded.</p>
-    {% endif %} {% endif %}
+      {% if submitted %}
+      <div class="result">
+        <h2>Thank you for your submission!</h2>
+        <p><strong>Baby Name:</strong> {{ baby_name }}</p>
+        <p><strong>Baby Age:</strong> {{ baby_age }}</p>
+        <p><strong>Parent Name:</strong> {{ parent_name }}</p>
+        <p><strong>Contact:</strong> {{ contact }}</p>
+        {% if image_url %}
+        <p><strong>Uploaded Image:</strong></p>
+        <img src="{{ image_url }}" alt="Uploaded Baby Image" />
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
   </body>
 </html>
