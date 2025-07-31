@@ -33,7 +33,8 @@
       }
 
       input[type="text"],
-      input[type="number"] {
+      input[type="number"],
+      input[type="file"] {
         width: 100%;
         padding: 10px;
         margin-top: 5px;
@@ -76,6 +77,13 @@
         margin-bottom: 8px;
       }
 
+      img {
+        max-width: 100%;
+        margin-top: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
       @media (max-width: 600px) {
         .container {
           margin: 20px;
@@ -97,9 +105,12 @@
           <li><strong>Baby Age:</strong> {{ baby_age }} months</li>
           <li><strong>Contact:</strong> {{ contact }}</li>
         </ul>
+        {% if image_url %}
+        <img src="{{ image_url }}" alt="Baby Photo" />
+        {% endif %}
       </div>
       {% else %}
-      <form method="POST">
+      <form method="POST" enctype="multipart/form-data">
         <label for="baby_name">Baby's Name:</label>
         <input type="text" name="baby_name" required />
 
@@ -111,6 +122,9 @@
 
         <label for="contact">Contact Info:</label>
         <input type="text" name="contact" required />
+
+        <label for="baby_image">Upload Baby's Photo:</label>
+        <input type="file" name="baby_image" accept="image/*" required />
 
         <input type="submit" value="Submit Entry" />
       </form>
