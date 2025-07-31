@@ -15,9 +15,9 @@ s3 = boto3.client('s3', region_name=S3_REGION)
 
 # ---------- MYSQL RDS CONFIG ----------
 DB_CONFIG = {
-    'host': 'your-rds-endpoint.amazonaws.com',
+    'host': 'deepthi.cbmwd77sfjx4.us-east-1.rds.amazonaws.com',
     'user': 'admin',
-    'password': 'yourpassword',
+    'password': 'deepthi123!',
     'database': 'baby_contest'
 }
 

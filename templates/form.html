@@ -1,134 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <title>Cute Baby Contest</title>
-    <style>
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: #fef9f4;
-        color: #333;
-        margin: 0;
-        padding: 0;
-      }
-
-      .container {
-        max-width: 500px;
-        background: #fff;
-        padding: 30px;
-        margin: 50px auto;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      }
-
-      h2 {
-        text-align: center;
-        color: #ff6f61;
-      }
-
-      label {
-        display: block;
-        margin-top: 15px;
-        font-weight: bold;
-      }
-
-      input[type="text"],
-      input[type="number"],
-      input[type="file"] {
-        width: 100%;
-        padding: 10px;
-        margin-top: 5px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        box-sizing: border-box;
-      }
-
-      input[type="submit"] {
-        background-color: #ff6f61;
-        color: white;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        margin-top: 20px;
-        width: 100%;
-        font-size: 16px;
-      }
-
-      input[type="submit"]:hover {
-        background-color: #ff3b2e;
-      }
-
-      .thank-you {
-        text-align: center;
-        background-color: #e6ffe6;
-        border: 1px solid #b3ffb3;
-        padding: 20px;
-        border-radius: 12px;
-        margin-top: 20px;
-      }
-
-      ul {
-        list-style: none;
-        padding-left: 0;
-      }
-
-      ul li {
-        margin-bottom: 8px;
-      }
-
-      img {
-        max-width: 100%;
-        margin-top: 20px;
-        border-radius: 12px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      }
-
-      @media (max-width: 600px) {
-        .container {
-          margin: 20px;
-          padding: 20px;
-        }
-      }
-    </style>
+    <title>Baby Photo Contest</title>
   </head>
   <body>
-    <div class="container">
-      <h2>Cute Baby Contest Form</h2>
+    <h1>Baby Photo Contest Form</h1>
 
-      {% if submitted %}
-      <div class="thank-you">
-        <p><strong>Thank you, {{ parent_name }}!</strong></p>
-        <p>Your baby's entry has been received 💖</p>
-        <ul>
-          <li><strong>Baby Name:</strong> {{ baby_name }}</li>
-          <li><strong>Baby Age:</strong> {{ baby_age }} months</li>
-          <li><strong>Contact:</strong> {{ contact }}</li>
-        </ul>
-        {% if image_url %}
-        <img src="{{ image_url }}" alt="Baby Photo" />
-        {% endif %}
-      </div>
-      {% else %}
-      <form method="POST" enctype="multipart/form-data">
-        <label for="baby_name">Baby's Name:</label>
-        <input type="text" name="baby_name" required />
+    <form method="POST" enctype="multipart/form-data">
+      <label>Baby Name:</label><br />
+      <input type="text" name="baby_name" required /><br /><br />
 
-        <label for="baby_age">Baby's Age (in months):</label>
-        <input type="number" name="baby_age" required />
+      <label>Baby Age:</label><br />
+      <input type="number" name="baby_age" required /><br /><br />
 
-        <label for="parent_name">Parent's Name:</label>
-        <input type="text" name="parent_name" required />
+      <label>Parent Name:</label><br />
+      <input type="text" name="parent_name" required /><br /><br />
 
-        <label for="contact">Contact Info:</label>
-        <input type="text" name="contact" required />
+      <label>Contact:</label><br />
+      <input type="text" name="contact" required /><br /><br />
 
-        <label for="baby_image">Upload Baby's Photo:</label>
-        <input type="file" name="baby_image" accept="image/*" required />
+      <label>Upload Baby Photo:</label><br />
+      <input
+        type="file"
+        name="baby_image"
+        accept="image/*"
+        required
+      /><br /><br />
 
-        <input type="submit" value="Submit Entry" />
-      </form>
-      {% endif %}
-    </div>
+      <input type="submit" value="Submit" />
+    </form>
+
+    {% if submitted %}
+    <hr />
+    <h2>Submission Successful!</h2>
+    <p><strong>Baby Name:</strong> {{ baby_name }}</p>
+    <p><strong>Baby Age:</strong> {{ baby_age }}</p>
+    <p><strong>Parent Name:</strong> {{ parent_name }}</p>
+    <p><strong>Contact:</strong> {{ contact }}</p>
+
+    {% if image_url %}
+    <p><strong>Uploaded Image:</strong></p>
+    <img
+      src="{{ image_url }}"
+      alt="Baby Image"
+      style="max-width: 300px; max-height: 300px"
+    />
+    {% else %}
+    <p>No image uploaded.</p>
+    {% endif %} {% endif %}
   </body>
 </html>
