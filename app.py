@@ -2,64 +2,83 @@ from flask import Flask, render_template, request
 import boto3
 import os
 from werkzeug.utils import secure_filename
+import mysql.connector
+from mysql.connector import Error
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = '/tmp'
 
-# S3 Configuration
-S3_BUCKET = 'ihtpeed'  # Replace with your actual bucket name
-s3 = boto3.client('s3')  # Assumes IAM role/instance profile for credentials
+# ---------- AWS S3 CONFIG ----------
+S3_BUCKET = 'ihtpeed'  # Replace with your bucket name
+S3_REGION = 'ap-south-1'  # Replace with your region
+s3 = boto3.client('s3', region_name=S3_REGION)
 
-@app.route('/')
-def upload_form():
-    return render_template('form.html', submitted=False)
+# ---------- MYSQL RDS CONFIG ----------
+DB_CONFIG = {
+    'host': 'your-rds-endpoint.amazonaws.com',
+    'user': 'admin',
+    'password': 'yourpassword',
+    'database': 'baby_contest'
+}
 
-@app.route('/', methods=['POST'])
-def upload_image():
-    if 'baby_image' not in request.files:
-        return 'No file part'
-
-    file = request.files['baby_image']
-
-    if file.filename == '':
-        return 'No selected file'
-
-    if file:
-        filename = secure_filename(file.filename)
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(filepath)
-
-        try:
-            # Upload to S3 (bucket must not require ACLs)
-            s3.upload_file(filepath, S3_BUCKET, filename)
-        except Exception as e:
-            return f'Upload failed: Failed to upload {filepath} to {S3_BUCKET}/{filename}: {str(e)}'
-
-        # Generate a pre-signed URL for image display
-        try:
-            image_url = s3.generate_presigned_url(
-                'get_object',
-                Params={'Bucket': S3_BUCKET, 'Key': filename},
-                ExpiresIn=3600  # 1 hour
+def insert_to_db(baby_name, baby_age, parent_name, contact, image_url):
+    try:
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS baby_entries (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                baby_name VARCHAR(100),
+                baby_age INT,
+                parent_name VARCHAR(100),
+                contact VARCHAR(100),
+                image_url TEXT
             )
-        except Exception as e:
-            image_url = None
+        """)
+        cursor.execute("""
+            INSERT INTO baby_entries (baby_name, baby_age, parent_name, contact, image_url)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (baby_name, baby_age, parent_name, contact, image_url))
+        connection.commit()
+        cursor.close()
+        connection.close()
+    except Error as e:
+        print("Database error:", e)
 
-        # Form fields
-        baby_name = request.form.get('baby_name')
-        baby_age = request.form.get('baby_age')
-        parent_name = request.form.get('parent_name')
-        contact = request.form.get('contact')
+@app.route('/', methods=['GET', 'POST'])
+def upload_form():
+    if request.method == 'POST':
+        # Get form fields
+        baby_name = request.form['baby_name']
+        baby_age = request.form['baby_age']
+        parent_name = request.form['parent_name']
+        contact = request.form['contact']
+        file = request.files['baby_image']
 
-        return render_template('form.html',
-                               submitted=True,
-                               baby_name=baby_name,
-                               baby_age=baby_age,
-                               parent_name=parent_name,
-                               contact=contact,
-                               image_url=image_url)
+        if file and file.filename != '':
+            filename = secure_filename(file.filename)
+            local_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(local_path)
 
-    return 'File upload failed'
+            # Upload to S3
+            try:
+                s3.upload_file(local_path, S3_BUCKET, filename)
+                image_url = f"https://{S3_BUCKET}.s3.{S3_REGION}.amazonaws.com/{filename}"
+            except Exception as e:
+                return f"Upload failed: {str(e)}"
+
+            # Insert into DB
+            insert_to_db(baby_name, baby_age, parent_name, contact, image_url)
+
+            return render_template('form.html',
+                                   submitted=True,
+                                   baby_name=baby_name,
+                                   baby_age=baby_age,
+                                   parent_name=parent_name,
+                                   contact=contact,
+                                   image_url=image_url)
+
+    return render_template('form.html', submitted=False)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
