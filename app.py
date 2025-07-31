@@ -10,7 +10,7 @@ app.config['UPLOAD_FOLDER'] = '/tmp'
 
 # ---------- AWS S3 CONFIG ----------
 S3_BUCKET = 'ihtpeed'  # Replace with your bucket name
-S3_REGION = 'ap-south-1'  # Replace with your region
+S3_REGION = 'us-east-1'  # Replace with your region
 s3 = boto3.client('s3', region_name=S3_REGION)
 
 # ---------- MYSQL RDS CONFIG ----------
